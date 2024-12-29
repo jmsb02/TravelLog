@@ -1,11 +1,11 @@
 package com.travellog.service;
 
-import com.travellog.crypto.PasswordEncoder;
 import com.travellog.domain.User;
 import com.travellog.exception.AlreadyExistsEmailException;
 import com.travellog.repository.UserRepository;
 import com.travellog.request.SignUp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,7 +25,7 @@ public class AuthService {
             throw  new AlreadyExistsEmailException();
         }
 
-        String encryptedPassword = encoder.encrypt(signUp.getPassword());
+        String encryptedPassword = encoder.encode(signUp.getPassword());
 
         User user = User.builder()
                 .name(signUp.getName())

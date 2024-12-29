@@ -10,11 +10,12 @@ public class ScryptPasswordEncoder implements PasswordEncoder{
 
     private static final SCryptPasswordEncoder encoder =
             new SCryptPasswordEncoder(
-                    6,
-                    8,
-                    1,
-                    32,
-                    64);
+                    16384, // cpuCost: 2^14
+                    8,     // memoryCost
+                    1,     // parallelization
+                    32,    // keyLength
+                    64     // saltLength
+            );
 
     @Override
     public String encrypt(String rawPassword) {

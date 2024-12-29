@@ -21,6 +21,8 @@ spring:
         default-page-size: 5
   session:
     timeout: 86400
+    jdbc:
+      initialize-schema: always
 
 travellog:
   jwt-key : "jit2KkRsOzIk9gqBiH1siP8uvcSg4E1khxXHl8bnakA="

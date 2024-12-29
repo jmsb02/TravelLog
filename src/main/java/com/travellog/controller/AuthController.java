@@ -1,6 +1,5 @@
 package com.travellog.controller;
 
-import com.travellog.config.AppConfig;
 import com.travellog.request.SignUp;
 import com.travellog.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final AppConfig appConfig;
 
     @PostMapping("/auth/signup")
     public void signUp(@RequestBody SignUp signUp) {

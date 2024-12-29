@@ -1,9 +1,24 @@
+### 회원 가입
+POST http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+  "name": "TravelLog",
+  "email" : "jmmmm@naver.com",
+  "password" : "1234"
+}
+
 ### 로그인
 POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=TravelLog&password=1234&remember=1
+username=jmmm@naver.com&password=12345&remember=1
 
+### 사용자 페이지
+GET https://localhost:8080/user
+
+### 관리자 페이지
+GET https://localhost:8080/admin
 
 ### 메인 페이지
 GET https://localhost:8080
