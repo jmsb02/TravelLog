@@ -1,0 +1,98 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+}
+
+group = 'com.TravelLog'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    asciidoctorExt
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    asciidoctorVersion = '3.0.3' // 버전 변수 선언
+    snippetsDir = file('build/generated-snippets')
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+
+    // 의존성에서 버전 번호를 직접 문자열로 삽입
+    asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:${asciidoctorVersion}"
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${asciidoctorVersion}"
+
+    // QueryDsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    //jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6' // or 'io.jsonwebtoken:jjwt-gson:0.12.6' for gson
+
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    //암호화
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.75'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.75'
+    implementation 'org.springframework.security:spring-security-crypto'
+
+    //security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //Temporary explicit version to fix Thymeleaf bug
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
+    implementation 'org.springframework.session:spring-session-jdbc'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+bootJar {
+    dependsOn asciidoctor
+
+    copy {
+        from asciidoctor.outputDir
+        into "src/main/resources/static/docs"
+    }
+}
