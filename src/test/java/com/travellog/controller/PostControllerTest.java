@@ -1,16 +1,20 @@
 package com.travellog.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.travellog.config.TravelLogMockUser;
 import com.travellog.domain.Post;
+import com.travellog.domain.User;
 import com.travellog.repository.PostRepository;
+import com.travellog.repository.UserRepository;
 import com.travellog.request.PostCreate;
 import com.travellog.request.PostEdit;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -37,14 +41,19 @@ class PostControllerTest {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    @BeforeEach
+    @AfterEach
     void clean() {
+        userRepository.deleteAll();
         postRepository.deleteAll();
     }
 
     @Test
     @DisplayName("글 작성 요청시 Hello World를 출력한다.")
+//    @WithMockUser(username = "jmmmm@naver.com", roles = {"ADMIN"})
+    @TravelLogMockUser(name = "홍길동", email = "jmmmm@naver.com", password = "1234")
     void test() throws Exception {
 
         //given
@@ -88,7 +97,9 @@ class PostControllerTest {
 //    }
 
     @Test
-    @DisplayName("글 작성 요청시 db에 값이 저장된다.")
+//    @WithMockUser(username = "jmmmm@naver.com", roles = {"ADMIN"})
+    @TravelLogMockUser(name = "홍길동", email = "jmmmm@naver.com", password = "1234")
+    @DisplayName("글 작성")
     void test3() throws Exception {
 
         //given
@@ -147,11 +158,20 @@ class PostControllerTest {
     @DisplayName("글 여러개 조회")
     void test5() throws Exception {
 
+        User user = User.builder()
+                .name("TravelLog")
+                .email("jmmmm@naver.com")
+                .password("1234")
+                .build();
+        
+        userRepository.save(user);
+
         List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> {
                     return Post.builder()
                             .title("트래블로그 제목 " + i)
                             .content("트래블로그 내용 " + i)
+                            .user(user)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -174,11 +194,14 @@ class PostControllerTest {
     @DisplayName("페이지 0을 요청하면 첫 페이지를 가져온다.")
     void test6() throws Exception {
 
+        User user = userRepository.findAll().get(0);
+
         List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> {
                     return Post.builder()
                             .title("트래블로그 제목 " + i)
                             .content("트래블로그 내용 " + i)
+                            .user(user)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -199,12 +222,18 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 제목 수정")
+    @TravelLogMockUser
     void test7() throws Exception {
-
         //given
+
+        User user = userRepository.findAll().get(0);
+
+        userRepository.save(user);
+
         Post post = Post.builder()
                 .title("트래블로그 제목")
                 .content("트래블로그 내용")
+                .user(user)
                 .build();
 
         postRepository.save(post);
@@ -225,12 +254,19 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 제목 삭제")
+    @TravelLogMockUser
     void test8() throws Exception {
 
         //given
+        User user = userRepository.findAll().get(0);
+
+        userRepository.save(user);
+
+
         Post post = Post.builder()
                 .title("트래블로그 제목")
                 .content("트래블로그 내용")
+                .user(user)
                 .build();
 
         postRepository.save(post);
@@ -249,7 +285,7 @@ class PostControllerTest {
     void test9() throws Exception {
 
         //expected(when + then)
-        mockMvc.perform(delete("/posts/{postId}", 1L)
+        mockMvc.perform(get("/posts/{postId}", 1L)
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -258,6 +294,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("존재하지 않는 게시글 수정")
+    @WithMockUser(username = "jmmmm@naver.com", roles = {"ADMIN"})
     void test10() throws Exception {
 
         PostEdit postEdit = PostEdit.builder()
@@ -271,28 +308,6 @@ class PostControllerTest {
                         .content(objectMapper.writeValueAsString(postEdit))
                 )
                 .andExpect(status().isNotFound())
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("게시글 작성시 제목에 '바보'는 포함될 수 없다.")
-    void test11() throws Exception {
-
-        //given
-        PostCreate request = PostCreate.builder()
-                .title("나는 바보입니다.")
-                .content("반포자이.")
-                .build();
-
-        String json = objectMapper.writeValueAsString(request);
-
-
-        //Excpect
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 

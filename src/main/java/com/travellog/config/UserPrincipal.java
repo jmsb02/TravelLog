@@ -14,7 +14,7 @@ public class UserPrincipal extends User {
 
     public UserPrincipal(com.travellog.domain.User user) {
         super(user.getEmail(), user.getPassword(), List.of(
-                new SimpleGrantedAuthority("ROLE_USER") //역할
+                new SimpleGrantedAuthority("ROLE_ADMIN") //역할
         ));
         this.userId = user.getId();
     }

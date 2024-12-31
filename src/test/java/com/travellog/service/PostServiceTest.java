@@ -1,8 +1,10 @@
 package com.travellog.service;
 
 import com.travellog.domain.Post;
+import com.travellog.domain.User;
 import com.travellog.exception.PostNotFound;
 import com.travellog.repository.PostRepository;
+import com.travellog.repository.UserRepository;
 import com.travellog.request.PostCreate;
 import com.travellog.request.PostEdit;
 import com.travellog.request.PostSearch;
@@ -28,23 +30,33 @@ class PostServiceTest {
     private PostService postService;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void clean() {
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("글 작성")
     void test1() {
         //given
+        var user = User.builder()
+                .name("TravelLog")
+                .email("jmmmm@naver.com")
+                .password("1234")
+                .build();
+        userRepository.save(user);
+
         PostCreate postCreate = PostCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
 
         //when
-        postService.write(postCreate);
+        postService.write(user.getId(), postCreate);
 
         //then
         assertEquals(1L, postRepository.count());

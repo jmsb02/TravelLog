@@ -2,9 +2,12 @@ package com.travellog.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.travellog.config.TravelLogMockUser;
 import com.travellog.domain.Post;
 import com.travellog.repository.PostRepository;
+import com.travellog.repository.UserRepository;
 import com.travellog.request.PostCreate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +45,15 @@ public class PostControllerDocTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
+    void clean() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("글 단건 조회")
     void test1() throws Exception {
@@ -74,6 +86,7 @@ public class PostControllerDocTest {
 
     @Test
     @DisplayName("글 등록")
+    @TravelLogMockUser(name = "홍길동", email = "jmmmm@naver.com", password = "1234")
     void test2() throws Exception {
         //given
         PostCreate request = PostCreate.builder()

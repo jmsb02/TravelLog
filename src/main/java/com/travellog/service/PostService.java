@@ -2,7 +2,9 @@ package com.travellog.service;
 
 import com.travellog.domain.Post;
 import com.travellog.exception.PostNotFound;
+import com.travellog.exception.UserNotFound;
 import com.travellog.repository.PostRepository;
+import com.travellog.repository.UserRepository;
 import com.travellog.request.PostCreate;
 import com.travellog.request.PostEdit;
 import com.travellog.request.PostSearch;
@@ -21,9 +23,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
 
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public void write(PostCreate postCreate) {
+    public void write(Long userId, PostCreate postCreate) {
+
+        var user = userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
         //PostCreate -> Entity
 
         Post post = Post.builder()
