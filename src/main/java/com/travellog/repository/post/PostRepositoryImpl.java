@@ -1,9 +1,9 @@
-package com.travellog.repository;
+package com.travellog.repository.post;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travellog.domain.Post;
 import com.travellog.domain.QPost;
-import com.travellog.request.PostSearch;
+import com.travellog.request.post.PostSearch;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

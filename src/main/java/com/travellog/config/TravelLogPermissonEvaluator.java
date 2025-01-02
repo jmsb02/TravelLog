@@ -1,7 +1,7 @@
 package com.travellog.config;
 
 import com.travellog.exception.PostNotFound;
-import com.travellog.repository.PostRepository;
+import com.travellog.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.PermissionEvaluator;

@@ -1,4 +1,4 @@
-package com.travellog.repository;
+package com.travellog.repository.post;
 
 import com.travellog.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

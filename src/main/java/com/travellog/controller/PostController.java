@@ -1,9 +1,9 @@
 package com.travellog.controller;
 
 import com.travellog.config.UserPrincipal;
-import com.travellog.request.PostCreate;
-import com.travellog.request.PostEdit;
-import com.travellog.request.PostSearch;
+import com.travellog.request.post.PostCreate;
+import com.travellog.request.post.PostEdit;
+import com.travellog.request.post.PostSearch;
 import com.travellog.response.PostResponse;
 import com.travellog.service.PostService;
 import jakarta.validation.Valid;

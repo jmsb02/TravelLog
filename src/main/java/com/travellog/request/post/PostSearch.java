@@ -1,4 +1,4 @@
-package com.travellog.request;
+package com.travellog.request.post;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -50,4 +50,17 @@ public class ExceptionController {
 
     }
 
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception(Exception e) {
+        log.error("에러발생 = {} ", e.getMessage());
+
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code("500")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(500).body(body);
+    }
 }

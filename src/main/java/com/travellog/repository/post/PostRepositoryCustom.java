@@ -1,7 +1,7 @@
-package com.travellog.repository;
+package com.travellog.repository.post;
 
 import com.travellog.domain.Post;
-import com.travellog.request.PostSearch;
+import com.travellog.request.post.PostSearch;
 
 import java.util.List;
 

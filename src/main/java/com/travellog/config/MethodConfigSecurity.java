@@ -1,6 +1,6 @@
 package com.travellog.config;
 
-import com.travellog.repository.PostRepository;
+import com.travellog.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
