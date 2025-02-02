@@ -1,4 +1,4 @@
-# 호돌맨과 함께하는 TravelLog 개인 프로젝트
+# 호돌맨과 함께하는 TravelLog 개인 프로젝트 (진행중)
 
 ![image](https://github.com/user-attachments/assets/3e6a2192-6763-4261-8bef-e041954aa5bb)
 
